@@ -26,6 +26,7 @@ export const state = {
 
   // 选中对象 id
   selectedId: null,
+  multiSelectIds: [],
 
   // 撤销/重做栈
   history: [],

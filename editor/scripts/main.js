@@ -204,17 +204,22 @@ function bindKeyboard() {
     }
 
     // 工具快捷键
-    const map = { v: 'select', w: 'wall', d: 'door', n: 'window', t: 'text', m: 'dimension' };
+    const map = { v: 'select', b: 'marquee', w: 'wall', d: 'door', n: 'window', t: 'text', m: 'dimension' };
     const tool = map[e.key.toLowerCase()];
     if (tool) {
       const btn = document.querySelector(`.tool[data-tool="${tool}"]`);
       if (btn) btn.click();
     }
 
-    // 删除
-    if ((e.key === 'Delete' || e.key === 'Backspace') && state.selectedId) {
-      e.preventDefault();
-      deleteObject(state.selectedId);
+    // 删除（单选 / 多选）
+    if ((e.key === 'Delete' || e.key === 'Backspace')) {
+      const ids = state.selectedId
+        ? [state.selectedId]
+        : (state.multiSelectIds || []);
+      if (ids.length > 0) {
+        e.preventDefault();
+        ids.slice().forEach(id => deleteObject(id));
+      }
     }
 
     // 主题切换

@@ -183,6 +183,32 @@ function bindZoomPan() {
   });
 }
 
+/**
+ * 工具触发的临时平移：mousedown 后调用，拖到 mouseup 自动结束。
+ * 用于 select 工具点空白拖动整个画板的场景。
+ */
+export function startStagePan(downEvent) {
+  let lastX = downEvent.clientX;
+  let lastY = downEvent.clientY;
+  const prevCursor = stage.container().style.cursor;
+  stage.container().style.cursor = 'grabbing';
+
+  const onMove = (ev) => {
+    const dx = ev.clientX - lastX;
+    const dy = ev.clientY - lastY;
+    lastX = ev.clientX; lastY = ev.clientY;
+    stage.position({ x: stage.x() + dx, y: stage.y() + dy });
+    stage.batchDraw();
+  };
+  const onUp = () => {
+    window.removeEventListener('mousemove', onMove);
+    window.removeEventListener('mouseup', onUp);
+    stage.container().style.cursor = prevCursor;
+  };
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+}
+
 export function applyView({ zoom, panX, panY }) {
   if (zoom !== undefined) {
     stage.scale({ x: zoom, y: zoom });
