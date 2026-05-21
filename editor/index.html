@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="day">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Homazi Floor Editor · 在线户型设计</title>
+  <link rel="stylesheet" href="./styles/editor.css" />
+  <script src="https://unpkg.com/konva@9.3.16/konva.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a class="brand-link" href="../index.html" title="返回首页">←</a>
+      <span class="brand-title">Homazi Floor Editor</span>
+      <span class="brand-sub">在线户型平面设计 · MVP</span>
+    </div>
+
+    <div class="topbar-center">
+      <button class="btn" data-action="new" title="新建">新建</button>
+      <button class="btn" data-action="save" title="保存到本地">保存</button>
+      <button class="btn" data-action="load" title="从本地加载">加载</button>
+      <span class="divider"></span>
+      <button class="btn" data-action="undo" title="撤销 (Cmd/Ctrl+Z)">↶ 撤销</button>
+      <button class="btn" data-action="redo" title="重做 (Cmd/Ctrl+Shift+Z)">↷ 重做</button>
+      <span class="divider"></span>
+      <button class="btn" data-action="export-png" title="导出 PNG">导出 PNG</button>
+      <button class="btn" data-action="export-json" title="导出 JSON">导出 JSON</button>
+    </div>
+
+    <div class="topbar-right">
+      <button class="theme-toggle" data-action="toggle-theme" title="切换白天/黑夜模式">
+        <span class="theme-icon-day">☀</span>
+        <span class="theme-icon-night">☾</span>
+        <span class="theme-label"></span>
+      </button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <!-- 左侧工具栏 -->
+    <aside class="toolbar">
+      <button class="tool" data-tool="select" title="选择 (V)" data-active="true">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 2l16 8-7 2-2 7L4 2z" fill="currentColor"/></svg>
+      </button>
+      <button class="tool" data-tool="wall" title="画墙 (W)">
+        <svg viewBox="0 0 24 24" width="22" height="22"><rect x="2" y="9" width="20" height="6" fill="currentColor"/></svg>
+      </button>
+      <button class="tool" data-tool="door" title="门 (D)">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V4h10l4 4v12"/><path d="M4 20a16 16 0 0 1 14-14"/></svg>
+      </button>
+      <button class="tool" data-tool="window" title="窗 (N)">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18"/><path d="M3 12h18M12 3v18"/></svg>
+      </button>
+      <button class="tool" data-tool="text" title="文字标注 (T)">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M5 4h14v3h-5v13h-4V7H5z" fill="currentColor"/></svg>
+      </button>
+      <button class="tool" data-tool="dimension" title="尺寸标注 (M)">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 9v6M21 9v6"/></svg>
+      </button>
+      <button class="tool" data-tool="scale" title="比例尺">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 16h18M6 16v-3M10 16v-5M14 16v-3M18 16v-5"/></svg>
+      </button>
+      <button class="tool" data-tool="compass" title="指北针">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 4v8l4 6-4-2-4 2 4-6z" fill="currentColor"/></svg>
+      </button>
+      <span class="toolbar-sep"></span>
+      <button class="tool tool-danger" data-tool="delete" title="删除选中 (Delete)">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>
+      </button>
+    </aside>
+
+    <!-- 中间画布 -->
+    <section class="canvas-area">
+      <div id="stage-container"></div>
+
+      <!-- 画布右下角缩放控制 -->
+      <div class="zoom-controls">
+        <button class="zoom-btn" data-action="zoom-in" title="放大">+</button>
+        <span class="zoom-level" id="zoomLevel">100%</span>
+        <button class="zoom-btn" data-action="zoom-out" title="缩小">−</button>
+        <button class="zoom-btn" data-action="zoom-reset" title="重置视图">⟲</button>
+      </div>
+
+      <!-- 状态栏 -->
+      <div class="statusbar">
+        <span id="statusTool">工具：选择</span>
+        <span id="statusCoord">坐标：0, 0</span>
+        <span id="statusScale">比例：1cm = 5px</span>
+        <span id="statusHint" class="hint"></span>
+      </div>
+    </section>
+
+    <!-- 右侧：素材库 + 属性面板 -->
+    <aside class="sidebar">
+      <div class="sidebar-tabs">
+        <button class="tab" data-tab="library" data-active="true">素材库</button>
+        <button class="tab" data-tab="props">属性</button>
+        <button class="tab" data-tab="layers">图层</button>
+      </div>
+
+      <!-- 素材库 -->
+      <div class="tab-panel" data-panel="library">
+        <div class="lib-section">
+          <h3>客厅</h3>
+          <div class="lib-grid" data-category="living">
+            <div class="lib-item" data-furniture="sofa-3" draggable="true" title="三人沙发"><span>三人沙发</span></div>
+            <div class="lib-item" data-furniture="sofa-l" draggable="true" title="L形沙发"><span>L形沙发</span></div>
+            <div class="lib-item" data-furniture="armchair" draggable="true" title="单人椅"><span>单人椅</span></div>
+            <div class="lib-item" data-furniture="coffee-table" draggable="true" title="茶几"><span>茶几</span></div>
+            <div class="lib-item" data-furniture="tv-stand" draggable="true" title="电视柜"><span>电视柜</span></div>
+          </div>
+        </div>
+        <div class="lib-section">
+          <h3>卧室</h3>
+          <div class="lib-grid" data-category="bedroom">
+            <div class="lib-item" data-furniture="bed-double" draggable="true" title="双人床"><span>双人床</span></div>
+            <div class="lib-item" data-furniture="bed-single" draggable="true" title="单人床"><span>单人床</span></div>
+            <div class="lib-item" data-furniture="nightstand" draggable="true" title="床头柜"><span>床头柜</span></div>
+            <div class="lib-item" data-furniture="wardrobe" draggable="true" title="衣柜"><span>衣柜</span></div>
+            <div class="lib-item" data-furniture="desk" draggable="true" title="书桌"><span>书桌</span></div>
+          </div>
+        </div>
+        <div class="lib-section">
+          <h3>厨房 & 餐厅</h3>
+          <div class="lib-grid" data-category="kitchen">
+            <div class="lib-item" data-furniture="dining-table" draggable="true" title="餐桌6人"><span>餐桌6人</span></div>
+            <div class="lib-item" data-furniture="kitchen-counter" draggable="true" title="操作台"><span>操作台</span></div>
+            <div class="lib-item" data-furniture="stove" draggable="true" title="灶台"><span>灶台</span></div>
+            <div class="lib-item" data-furniture="sink" draggable="true" title="水槽"><span>水槽</span></div>
+            <div class="lib-item" data-furniture="fridge" draggable="true" title="冰箱"><span>冰箱</span></div>
+          </div>
+        </div>
+        <div class="lib-section">
+          <h3>卫浴</h3>
+          <div class="lib-grid" data-category="bathroom">
+            <div class="lib-item" data-furniture="toilet" draggable="true" title="马桶"><span>马桶</span></div>
+            <div class="lib-item" data-furniture="basin" draggable="true" title="洗手盆"><span>洗手盆</span></div>
+            <div class="lib-item" data-furniture="shower" draggable="true" title="淋浴"><span>淋浴</span></div>
+            <div class="lib-item" data-furniture="bathtub" draggable="true" title="浴缸"><span>浴缸</span></div>
+          </div>
+        </div>
+        <div class="lib-section">
+          <h3>灯光</h3>
+          <div class="lib-grid" data-category="light">
+            <div class="lib-item lib-light" data-light="downlight" draggable="true" title="嵌入式筒灯">
+              <span class="light-symbol">●</span><span>筒灯</span>
+            </div>
+            <div class="lib-item lib-light" data-light="pendant" draggable="true" title="吊灯">
+              <span class="light-symbol">⊕</span><span>吊灯</span>
+            </div>
+            <div class="lib-item lib-light" data-light="chandelier" draggable="true" title="线性吊灯">
+              <span class="light-symbol">▬</span><span>线性灯</span>
+            </div>
+            <div class="lib-item lib-light" data-light="strip" draggable="true" title="灯带">
+              <span class="light-symbol">━</span><span>灯带</span>
+            </div>
+            <div class="lib-item lib-light" data-light="sconce" draggable="true" title="壁灯">
+              <span class="light-symbol">✦</span><span>壁灯</span>
+            </div>
+            <div class="lib-item lib-light" data-light="bath-light" draggable="true" title="卫浴灯">
+              <span class="light-symbol">⊙</span><span>卫浴灯</span>
+            </div>
+            <div class="lib-item lib-light" data-light="balcony-light" draggable="true" title="阳台灯">
+              <span class="light-symbol">✺</span><span>阳台灯</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 属性面板 -->
+      <div class="tab-panel" data-panel="props" hidden>
+        <div id="propsEmpty" class="empty-hint">请先选中一个对象</div>
+        <div id="propsForm" hidden>
+          <div class="prop-row">
+            <label>名称</label>
+            <input type="text" id="propName" />
+          </div>
+          <div class="prop-row">
+            <label>X (cm)</label>
+            <input type="number" id="propX" step="1" />
+          </div>
+          <div class="prop-row">
+            <label>Y (cm)</label>
+            <input type="number" id="propY" step="1" />
+          </div>
+          <div class="prop-row">
+            <label>宽 (cm)</label>
+            <input type="number" id="propW" step="1" />
+          </div>
+          <div class="prop-row">
+            <label>高 (cm)</label>
+            <input type="number" id="propH" step="1" />
+          </div>
+          <div class="prop-row">
+            <label>旋转 (°)</label>
+            <input type="number" id="propRotation" step="15" />
+          </div>
+          <div class="prop-row prop-row-actions">
+            <button class="btn btn-small" id="propRotateLeft">↺ -90°</button>
+            <button class="btn btn-small" id="propRotateRight">↻ +90°</button>
+            <button class="btn btn-small btn-danger" id="propDelete">删除</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 图层面板（占位） -->
+      <div class="tab-panel" data-panel="layers" hidden>
+        <ul class="layer-list">
+          <li class="layer-row" data-layer="walls"><span>🧱</span> 墙体 <span class="layer-count" id="countWalls">0</span></li>
+          <li class="layer-row" data-layer="openings"><span>🚪</span> 门窗 <span class="layer-count" id="countOpenings">0</span></li>
+          <li class="layer-row" data-layer="furniture"><span>🛋</span> 家具 <span class="layer-count" id="countFurniture">0</span></li>
+          <li class="layer-row" data-layer="lights"><span>💡</span> 灯光 <span class="layer-count" id="countLights">0</span></li>
+          <li class="layer-row" data-layer="annotations"><span>📝</span> 标注 <span class="layer-count" id="countAnnotations">0</span></li>
+        </ul>
+      </div>
+    </aside>
+  </main>
+
+  <!-- 隐藏的文件加载 input -->
+  <input type="file" id="fileInput" accept=".json" hidden />
+
+  <!-- 应用脚本（模块化） -->
+  <script type="module" src="./scripts/main.js"></script>
+</body>
+</html>

@@ -125,6 +125,18 @@ h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 500; letter-spacin
 .nav__links a:hover { color: var(--ink); }
 .nav__links a:hover::after { width: 100%; }
 
+/* CTA：去在线编辑器 */
+.nav__links a.nav__cta {
+  padding: 6px 14px;
+  background: var(--accent, #c4a574);
+  color: #fff;
+  border-radius: 4px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.nav__links a.nav__cta::after { display: none; }
+.nav__links a.nav__cta:hover { color: #fff; opacity: 0.85; }
+
 /* 主题开关 */
 .theme-toggle {
   display: flex; align-items: center; gap: 10px;
