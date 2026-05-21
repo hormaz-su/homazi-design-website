@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>霍玛兹 · 一层室内空间设计 | First Floor Interior</title>
+  <meta name="description" content="霍玛兹建筑设计作品 · 一层室内平面设计 — 客厅、餐厅、厨房、卧室、电视房、楼梯间、三处阳台，分层照明系统设计。" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body data-theme="day">
+
+  <!-- ======= 顶部导航 ======= -->
+  <header class="nav">
+    <div class="nav__inner container">
+      <a href="#hero" class="nav__brand">
+        <span class="brand-mark">H</span>
+        <span class="brand-text">
+          <strong>HOMAZI</strong>
+          <em>霍玛兹 · 建筑设计</em>
+        </span>
+      </a>
+      <nav class="nav__links">
+        <a href="#hero">首页</a>
+        <a href="#plan">平面图</a>
+        <a href="#rooms">空间</a>
+        <a href="#lighting">灯光</a>
+        <a href="#concept">理念</a>
+      </nav>
+      <button id="themeToggle" class="theme-toggle" aria-label="切换日夜模式" title="切换日夜模式">
+        <span class="theme-toggle__track">
+          <span class="theme-toggle__thumb"></span>
+        </span>
+        <span class="theme-toggle__label">夜</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ======= Hero 英雄区 ======= -->
+  <section id="hero" class="hero">
+    <div class="hero__bg"></div>
+    <div class="container hero__inner">
+      <div class="hero__meta">
+        <span class="dot"></span>
+        <span>INTERIOR DESIGN · 室内空间设计</span>
+      </div>
+      <h1 class="hero__title">
+        <span class="line">栖于光与空间的</span>
+        <span class="line accent">现代生活美学</span>
+      </h1>
+      <p class="hero__subtitle">
+        三阳台环抱 · 客餐厨一体 · 分层照明系统<br />
+        以方正格局承载松弛日常，以暖光勾勒夜的轮廓。
+      </p>
+      <div class="hero__actions">
+        <a href="#plan" class="btn btn--primary">查看平面图 →</a>
+        <a href="#concept" class="btn btn--ghost">设计理念</a>
+      </div>
+      <div class="hero__stats">
+        <div class="stat"><strong>7</strong><span>功能空间</span></div>
+        <div class="stat"><strong>3</strong><span>开放阳台</span></div>
+        <div class="stat"><strong>5</strong><span>照明层级</span></div>
+        <div class="stat"><strong>1F</strong><span>当前楼层</span></div>
+      </div>
+    </div>
+    <div class="hero__scroll">
+      <span></span> 向下滚动
+    </div>
+  </section>
+
+  <!-- ======= 平面图展示（白天/黑夜切换） ======= -->
+  <section id="plan" class="section plan">
+    <div class="container">
+      <div class="section__head">
+        <span class="eyebrow">PLAN VIEW</span>
+        <h2>一层室内平面图 · 日夜双境</h2>
+        <p>同一格局，两种语境。日间以浅色铺陈空间秩序，夜间以蓝图意象勾画结构骨骼。</p>
+      </div>
+
+      <div class="plan__viewer">
+        <div class="plan__tabs">
+          <button class="plan__tab is-active" data-mode="day">☀ 日间 · 浅色</button>
+          <button class="plan__tab" data-mode="night">☾ 夜间 · 蓝图</button>
+        </div>
+
+        <div class="plan__stage">
+          <picture class="plan__image plan__image--day is-active">
+            <img src="assets/images/floor-day.jpg" alt="一层平面图 - 日间浅色版" loading="lazy" />
+          </picture>
+          <picture class="plan__image plan__image--night">
+            <img src="assets/images/floor-night.jpg" alt="一层平面图 - 夜间蓝图版" loading="lazy" />
+          </picture>
+
+          <div class="plan__hint">
+            <span>💡</span> 点击下方任意房间，查看空间详情
+          </div>
+        </div>
+
+        <!-- 房间索引 -->
+        <div class="plan__rooms">
+          <button class="chip" data-room="kitchen">🍳 厨房</button>
+          <button class="chip" data-room="tv">📺 电视房</button>
+          <button class="chip" data-room="dining">🍽 餐厅</button>
+          <button class="chip" data-room="living">🛋 客厅</button>
+          <button class="chip" data-room="bedroom">🛏 卧室</button>
+          <button class="chip" data-room="stairs">🪜 楼梯间</button>
+          <button class="chip" data-room="balcony">🌿 阳台 ×3</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 房间详情 ======= -->
+  <section id="rooms" class="section rooms">
+    <div class="container">
+      <div class="section__head">
+        <span class="eyebrow">SPACES</span>
+        <h2>空间叙事</h2>
+        <p>七个功能空间，以中央楼梯为锚点，向四周温柔展开。</p>
+      </div>
+
+      <div class="rooms__grid">
+
+        <article class="room-card" id="card-kitchen">
+          <div class="room-card__icon">🍳</div>
+          <h3>厨房 Kitchen</h3>
+          <p class="room-card__loc">左上 · A–B 轴 · ①–②</p>
+          <p>L 型橱柜配中央岛台，岛台上方暖色吊灯成为视觉焦点。橱柜下方嵌入线性灯带，提供精准操作照明。</p>
+          <ul class="room-card__list">
+            <li>✦ Pendant Light · 装饰吊灯</li>
+            <li>✦ Under-Cabinet Strip · 操作灯带</li>
+            <li>✦ 与餐厅无缝相连</li>
+          </ul>
+        </article>
+
+        <article class="room-card" id="card-tv">
+          <div class="room-card__icon">📺</div>
+          <h3>电视房 TV Room</h3>
+          <p class="room-card__loc">右上 · B–C 轴 · ①–②</p>
+          <p>L 型沙发组合 + 媒体墙，多颗嵌入式筒灯均匀分布，支持开放式与餐厅互动。</p>
+          <ul class="room-card__list">
+            <li>✦ Recessed Downlight × N</li>
+            <li>✦ 与餐厅开放连通</li>
+            <li>✦ 紧邻角落小阳台</li>
+          </ul>
+        </article>
+
+        <article class="room-card room-card--feature" id="card-dining">
+          <div class="room-card__icon">🍽</div>
+          <h3>餐厅 Dining</h3>
+          <p class="room-card__loc">右侧中部 · 公区核心</p>
+          <p>可坐 8–10 人的长方形餐桌，正上方的<strong>线性吊灯</strong>是整层最具仪式感的光源装置。</p>
+          <ul class="room-card__list">
+            <li>✦ Linear Chandelier · 线性吊灯</li>
+            <li>✦ 与厨房 / 客厅 / 电视房三向贯通</li>
+            <li>✦ 兼具就餐与社交功能</li>
+          </ul>
+        </article>
+
+        <article class="room-card" id="card-living">
+          <div class="room-card__icon">🛋</div>
+          <h3>客厅 Living Room</h3>
+          <p class="room-card__loc">右下 · 全层最大空间</p>
+          <p>多组沙发自由组合，毗邻南向阳台，自然光充沛。均匀筒灯铺底 + 阳台灯收边，营造柔和过渡。</p>
+          <ul class="room-card__list">
+            <li>✦ Recessed Downlight 阵列</li>
+            <li>✦ Balcony Light 衔接室外</li>
+            <li>✦ 与阳台无缝过渡</li>
+          </ul>
+        </article>
+
+        <article class="room-card" id="card-bedroom">
+          <div class="room-card__icon">🛏</div>
+          <h3>卧室 Bed Room</h3>
+          <p class="room-card__loc">左下 · ④–⑤ 轴</p>
+          <p>双人床配独立卫浴与衣帽空间，床头两侧对称壁灯，营造私密的夜读氛围。</p>
+          <ul class="room-card__list">
+            <li>✦ Wall Sconce × 2 · 床头壁灯</li>
+            <li>✦ Bathroom Fixture · 卫浴灯</li>
+            <li>✦ 直通南向小阳台</li>
+          </ul>
+        </article>
+
+        <article class="room-card" id="card-stairs">
+          <div class="room-card__icon">🪜</div>
+          <h3>楼梯间 Staircase</h3>
+          <p class="room-card__loc">平面正中 · 动线枢纽</p>
+          <p>双跑楼梯，<code>DN</code> 通向地下层，<code>UP</code> 连接二层。居中布局让所有空间环绕展开。</p>
+          <ul class="room-card__list">
+            <li>✦ 上下双向贯通</li>
+            <li>✦ 动线最短化设计</li>
+            <li>✦ 视觉与功能的中心</li>
+          </ul>
+        </article>
+
+        <article class="room-card" id="card-balcony">
+          <div class="room-card__icon">🌿</div>
+          <h3>阳台 Balcony × 3</h3>
+          <p class="room-card__loc">北侧 / 东北角 / 南侧</p>
+          <p>三处阳台环抱主体空间，均配独立阳台灯。东北角阳台以热带阔叶植物点缀，模糊室内外边界。</p>
+          <ul class="room-card__list">
+            <li>✦ 北侧 · 厨房延伸阳台</li>
+            <li>✦ 东北 · 角落绿植阳台</li>
+            <li>✦ 南侧 · 卧室与客厅之间</li>
+          </ul>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 灯光设计 ======= -->
+  <section id="lighting" class="section lighting">
+    <div class="container">
+      <div class="section__head">
+        <span class="eyebrow">LIGHTING SYSTEM</span>
+        <h2>分层照明系统</h2>
+        <p>主照明 / 重点照明 / 装饰照明三层叠加，金色暖光为主调，使空间层次温润而不平铺。</p>
+      </div>
+
+      <div class="legend">
+        <div class="legend__item">
+          <span class="legend__symbol">○</span>
+          <div>
+            <h4>Recessed Downlight</h4>
+            <p>嵌入式筒灯 · 全屋主照明，均匀洗光，杜绝暗角。</p>
+          </div>
+        </div>
+        <div class="legend__item">
+          <span class="legend__symbol">⊕</span>
+          <div>
+            <h4>Pendant Light</h4>
+            <p>装饰吊灯 · 用于厨房岛台上方，强调操作中心。</p>
+          </div>
+        </div>
+        <div class="legend__item">
+          <span class="legend__symbol legend__symbol--linear">
+            <svg viewBox="0 0 60 14" aria-hidden="true">
+              <line x1="6" y1="7" x2="54" y2="7" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="12" cy="7" r="4" fill="currentColor"/>
+              <circle cx="30" cy="7" r="4" fill="currentColor"/>
+              <circle cx="48" cy="7" r="4" fill="currentColor"/>
+            </svg>
+          </span>
+          <div>
+            <h4>Linear Chandelier</h4>
+            <p>线性吊灯 · 餐桌正上方，整层最具仪式感的光语。</p>
+          </div>
+        </div>
+        <div class="legend__item">
+          <span class="legend__symbol">▬</span>
+          <div>
+            <h4>Under-Cabinet Strip</h4>
+            <p>橱柜底部灯带 · 厨房备餐区的隐形精准光源。</p>
+          </div>
+        </div>
+        <div class="legend__item">
+          <span class="legend__symbol">✦</span>
+          <div>
+            <h4>Wall Sconce</h4>
+            <p>壁灯 · 卧室床头对称布置，柔和阅读氛围。</p>
+          </div>
+        </div>
+        <div class="legend__item">
+          <span class="legend__symbol">⊙</span>
+          <div>
+            <h4>Bathroom Fixture</h4>
+            <p>卫浴专用灯 · 防潮与显色兼顾。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 设计理念 ======= -->
+  <section id="concept" class="section concept">
+    <div class="container concept__grid">
+      <div class="concept__text">
+        <span class="eyebrow">DESIGN CONCEPT</span>
+        <h2>方正格局，<br />柔软日常。</h2>
+        <p>
+          这一层的设计始于一条简单的直觉：<strong>把楼梯放在正中央</strong>，
+          让所有功能空间像花瓣一样从动线中心向外展开。厨房、餐厅、电视房、客厅形成
+          连续的开放公区；卧室独立于一隅，享受南向小阳台带来的私密静谧。
+        </p>
+        <p>
+          三处阳台不是装饰，而是<strong>把自然光引入室内的入口</strong>。
+          清晨阳光从东北角探入，傍晚的暖色光晕沿南阳台铺到客厅地面，
+          夜里灯具接力，把屋子重新点亮成温暖的容器。
+        </p>
+        <blockquote>
+          “平面图是建筑写给生活的第一封信。”
+          <cite>— 霍玛兹 设计笔记</cite>
+        </blockquote>
+      </div>
+      <div class="concept__visual">
+        <div class="concept__card">
+          <h4>OPEN PUBLIC AREA</h4>
+          <p>客厅 · 餐厅 · 厨房 · 电视房<br />四向贯通，社交无界</p>
+        </div>
+        <div class="concept__card">
+          <h4>PRIVATE ZONE</h4>
+          <p>独立卧室 · 含卫浴与小阳台<br />松弛、安静、属于自己的角落</p>
+        </div>
+        <div class="concept__card">
+          <h4>CIRCULATION CORE</h4>
+          <p>中央楼梯（DN / UP）<br />动线最短，三层贯通</p>
+        </div>
+        <div class="concept__card">
+          <h4>NATURE INSIDE</h4>
+          <p>三阳台 + 热带植被<br />让风、光与绿色走进来</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 页脚 ======= -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <strong>HOMAZI · 霍玛兹建筑设计</strong>
+        <p>Interior Design · 室内空间设计</p>
+      </div>
+      <div class="footer__meta">
+        <span>© 2026 Homazi House Design</span>
+        <span>Source · 微信公众号「霍玛兹」</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======= 房间详情弹窗 ======= -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel">
+      <button class="modal__close" data-close aria-label="关闭">×</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
