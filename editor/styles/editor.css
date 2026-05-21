@@ -135,6 +135,12 @@ input { font-family: inherit; }
   transition: all var(--transition);
 }
 .btn:hover { background: var(--bg-panel-2); color: var(--text-primary); }
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--accent-hover); color: #fff; }
+[data-theme="night"] .btn-primary { color: #0d1b2e; }
 .btn-small { padding: 4px 8px; font-size: 11px; }
 .btn-danger { color: var(--danger); }
 .btn-danger:hover { background: rgba(196, 90, 90, 0.1); }
@@ -163,7 +169,7 @@ input { font-family: inherit; }
 .workspace {
   flex: 1;
   display: grid;
-  grid-template-columns: 56px 1fr 280px;
+  grid-template-columns: 76px 1fr 280px;
   overflow: hidden;
   min-height: 0;
 }
@@ -175,15 +181,26 @@ input { font-family: inherit; }
   padding: 8px 6px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   align-items: center;
 }
 .tool {
-  width: 42px; height: 42px;
-  display: flex; align-items: center; justify-content: center;
+  width: 64px;
+  padding: 6px 0 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
   color: var(--text-secondary);
   border-radius: var(--radius-md);
   transition: all var(--transition);
+}
+.tool svg { display: block; }
+.tool-label {
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.02em;
 }
 .tool:hover { background: var(--bg-panel-2); color: var(--text-primary); }
 .tool[data-active="true"] {
@@ -192,7 +209,7 @@ input { font-family: inherit; }
 }
 [data-theme="night"] .tool[data-active="true"] { color: #0d1b2e; }
 .tool-danger:hover { color: var(--danger); }
-.toolbar-sep { width: 24px; height: 1px; background: var(--border); margin: 6px 0; }
+.toolbar-sep { width: 32px; height: 1px; background: var(--border); margin: 6px 0; }
 
 /* ============ 画布区 ============ */
 .canvas-area {
@@ -304,10 +321,12 @@ input { font-family: inherit; }
   gap: 6px;
 }
 .lib-item {
-  aspect-ratio: 1.4 / 1;
+  position: relative;
+  height: 78px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-end;
   background: var(--bg-panel-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -316,8 +335,29 @@ input { font-family: inherit; }
   cursor: grab;
   user-select: none;
   text-align: center;
-  padding: 6px 4px;
+  padding: 0;
+  overflow: hidden;
   transition: all var(--transition);
+}
+.lib-item::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 22px 0;          /* 缩略图占上半部分 */
+  background-image: var(--thumb);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 90% 90%;
+}
+.lib-item > span {
+  position: relative;
+  height: 22px;
+  line-height: 22px;
+  padding: 0 4px;
+  background: linear-gradient(to top, var(--bg-panel-2) 70%, transparent);
+  font-size: 10.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .lib-item:hover {
   border-color: var(--accent);
@@ -326,11 +366,10 @@ input { font-family: inherit; }
   box-shadow: var(--shadow-sm);
 }
 .lib-item:active { cursor: grabbing; }
-.lib-light { flex-direction: column; gap: 2px; }
-.light-symbol {
-  color: var(--light-color);
-  font-size: 16px;
-  text-shadow: 0 0 8px var(--light-glow);
+
+/* 灯光小图原样保留小符号（备用，如果缩略图未生成） */
+.lib-light .light-symbol {
+  display: none;
 }
 
 /* 属性面板 */

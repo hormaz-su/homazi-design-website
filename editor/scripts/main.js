@@ -15,6 +15,8 @@ import {
   newDocument, exportJSON, importJSON, exportPNG,
   loadAutoSave, autoSave,
 } from './history.js';
+import { renderLibraryThumbnails } from './thumbnails.js';
+import { buildFloorDayTemplate } from './templates.js';
 
 /* ============ 初始化 ============ */
 window.addEventListener('DOMContentLoaded', () => {
@@ -48,6 +50,9 @@ window.addEventListener('DOMContentLoaded', () => {
   // 默认右侧面板：素材库
   setActiveTab('library');
 
+  // 渲染素材库缩略图（需要 stage 初始化后再做）
+  renderLibraryThumbnails();
+
   // 调试入口：浏览器控制台可访问 window.__editor 检查/操作状态
   window.__editor = { state, stage, layers, renderAll, renderObject, genId, pushHistory };
 });
@@ -75,6 +80,7 @@ function bindToolbar() {
 function bindTopbar() {
   const map = {
     'new':         () => newDocument(),
+    'template-floor-day': () => loadFloorDayTemplate(),
     'save':        () => exportJSON(),
     'load':        () => document.getElementById('fileInput').click(),
     'undo':        () => undo(),
@@ -351,4 +357,42 @@ function bindPropertyPanel() {
   document.getElementById('propDelete').addEventListener('click', () => {
     if (state.selectedId) deleteObject(state.selectedId);
   });
+}
+
+/* ============ 模板加载 ============ */
+function loadFloorDayTemplate() {
+  const hasUserContent = state.objects.some(o => !['scale', 'compass'].includes(o.type));
+  if (hasUserContent) {
+    if (!confirm('加载示例模板将覆盖当前内容，是否继续？')) return;
+  }
+  state.objects = buildFloorDayTemplate();
+  state.selectedId = null;
+  state.history = [JSON.stringify(state.objects)];
+  state.historyIndex = 0;
+  renderAll();
+  // 自动缩放到合适视图，让户型整体居中
+  fitTemplateToView();
+  // 持久化
+  import('./history.js').then(m => m.autoSave());
+}
+
+function fitTemplateToView() {
+  // 模板范围约 -700..+800 横向，-600..+700 纵向（含阳台）
+  const bbox = { minX: -800, maxX: 850, minY: -700, maxY: 720 };
+  const w = bbox.maxX - bbox.minX;
+  const h = bbox.maxY - bbox.minY;
+  const padding = 80;
+  const stageW = stage.width() - padding * 2;
+  const stageH = stage.height() - padding * 2;
+  const zoom = Math.min(stageW / w, stageH / h);
+  const cx = (bbox.minX + bbox.maxX) / 2;
+  const cy = (bbox.minY + bbox.maxY) / 2;
+  stage.scale({ x: zoom, y: zoom });
+  stage.position({
+    x: stage.width() / 2 - cx * zoom,
+    y: stage.height() / 2 - cy * zoom,
+  });
+  state.zoom = zoom;
+  stage.batchDraw();
+  updateZoomDisplay();
 }
