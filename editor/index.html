@@ -26,6 +26,8 @@
       <span class="divider"></span>
       <button class="btn" data-action="export-png" title="导出 PNG">导出 PNG</button>
       <button class="btn" data-action="export-json" title="导出 JSON">导出 JSON</button>
+      <span class="divider"></span>
+      <button class="btn btn-ai" id="aiToggle" title="AI 设计助手">✨ AI 助手</button>
     </div>
 
     <div class="topbar-right">
@@ -229,6 +231,38 @@
       </div>
     </aside>
   </main>
+
+  <!-- AI 浮动按钮（面板关闭时显示） -->
+  <button class="ai-fab" id="aiFab" title="打开 AI 助手">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 2l2.39 6.95L22 11l-7.61 2.05L12 22l-2.39-8.95L2 11l7.61-2.05z"/>
+    </svg>
+  </button>
+
+  <!-- AI 对话面板（底部抽屉） -->
+  <section class="ai-panel" id="aiPanel" aria-hidden="true">
+    <header class="ai-panel-header">
+      <span class="ai-panel-title">
+        <span class="ai-spark">✨</span>
+        AI 设计助手
+        <span class="ai-panel-sub">智谱 GLM-4-Flash</span>
+      </span>
+      <div class="ai-panel-actions">
+        <button class="btn btn-small" id="aiClear" title="清空对话">清空</button>
+        <button class="btn btn-small" id="aiClose" title="关闭面板">收起 ▾</button>
+      </div>
+    </header>
+
+    <div class="ai-messages" id="aiMessages"></div>
+
+    <div class="ai-chips" id="aiChips"></div>
+
+    <div class="ai-inputbar">
+      <textarea id="aiInput" rows="1"
+        placeholder="例：帮我设计一个 90 平米三室两厅 / 在客厅加一组沙发茶几 / 主卧灯光偏暖一点…"></textarea>
+      <button class="btn btn-primary" id="aiSend" title="发送 (Enter)">发送</button>
+    </div>
+  </section>
 
   <!-- 隐藏的文件加载 input -->
   <input type="file" id="fileInput" accept=".json" hidden />

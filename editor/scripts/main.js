@@ -17,6 +17,7 @@ import {
 } from './history.js';
 import { renderLibraryThumbnails } from './thumbnails.js';
 import { buildFloorDayTemplate } from './templates.js';
+import { initAIPanel } from './ai/panel.js';
 
 /* ============ 初始化 ============ */
 window.addEventListener('DOMContentLoaded', () => {
@@ -52,6 +53,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // 渲染素材库缩略图（需要 stage 初始化后再做）
   renderLibraryThumbnails();
+
+  // AI 设计助手面板
+  initAIPanel();
 
   // 调试入口：浏览器控制台可访问 window.__editor 检查/操作状态
   window.__editor = { state, stage, layers, renderAll, renderObject, genId, pushHistory };
