@@ -40,6 +40,10 @@ export const LIGHT_META = {
   'balcony-light':  { label: '阳台灯',  radius: 11 },
 };
 
+/* 子类型清单：以 META 的 key 为唯一来源，供 AI 提示词 / 校验等复用 */
+export const FURNITURE_SUBTYPES = Object.keys(FURNITURE_META);
+export const LIGHT_SUBTYPES = Object.keys(LIGHT_META);
+
 /* ============ 家具构造器 ============ */
 
 function baseGroup(obj, c) {

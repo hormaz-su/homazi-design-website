@@ -7,17 +7,9 @@
  *  - 给 AI 完整的家具/灯光子类型清单 + 当前画布摘要 + 坐标系约定
  */
 
-export const FURNITURE_SUBTYPES = [
-  'sofa-3', 'sofa-l', 'armchair', 'coffee-table', 'tv-stand',
-  'bed-double', 'bed-single', 'nightstand', 'wardrobe', 'desk',
-  'dining-table', 'kitchen-counter', 'stove', 'sink', 'fridge',
-  'toilet', 'basin', 'shower', 'bathtub',
-];
-
-export const LIGHT_SUBTYPES = [
-  'downlight', 'pendant', 'chandelier', 'strip',
-  'sconce', 'bath-light', 'balcony-light',
-];
+// 子类型清单的唯一来源是 furniture.js 的 META；此处仅再导出，避免两份清单漂移。
+export { FURNITURE_SUBTYPES, LIGHT_SUBTYPES } from '../furniture.js';
+import { FURNITURE_SUBTYPES, LIGHT_SUBTYPES } from '../furniture.js';
 
 /**
  * 构造系统提示词
