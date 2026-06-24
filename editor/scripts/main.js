@@ -18,6 +18,7 @@ import {
 import { renderLibraryThumbnails } from './thumbnails.js';
 import { buildFloorDayTemplate } from './templates.js';
 import { initAIPanel } from './ai/panel.js';
+import { toast } from './toast.js';
 
 /* ============ 初始化 ============ */
 window.addEventListener('DOMContentLoaded', () => {
@@ -383,6 +384,7 @@ function loadFloorDayTemplate() {
   fitTemplateToView();
   // 持久化
   import('./history.js').then(m => m.autoSave());
+  toast('已加载示例户型模板', 'success');
 }
 
 function fitTemplateToView() {

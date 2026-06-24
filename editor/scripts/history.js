@@ -1,11 +1,41 @@
 /**
  * 撤销 / 重做 / 自动保存（localStorage）
  */
-import { state } from './state.js';
+import { state, genId } from './state.js';
 import { renderAll } from './renderer.js';
+import { toast } from './toast.js';
 
 const STORAGE_KEY = 'homazi-floor-editor:autosave-v1';
 const HISTORY_LIMIT = 50;
+
+const VALID_TYPES = new Set([
+  'wall', 'door', 'window', 'furniture', 'light', 'text', 'scale', 'compass', 'dimension',
+]);
+
+/**
+ * 清洗外部来源（导入文件 / localStorage）的对象数组：
+ * 不信任任何字段——丢弃结构非法的对象，补全缺失 id，避免渲染时崩溃。
+ * @returns {{objects: Array, dropped: number}}
+ */
+function sanitizeObjects(arr) {
+  if (!Array.isArray(arr)) return { objects: [], dropped: 0 };
+  const out = [];
+  let dropped = 0;
+  for (const raw of arr) {
+    if (!raw || typeof raw !== 'object' || !VALID_TYPES.has(raw.type)) { dropped++; continue; }
+    // 墙体必须有合法 points；其余类型必须有数值 x/y
+    if (raw.type === 'wall') {
+      if (!Array.isArray(raw.points) || raw.points.length < 4
+          || !raw.points.slice(0, 4).every(n => Number.isFinite(Number(n)))) { dropped++; continue; }
+    } else if (!Number.isFinite(Number(raw.x)) || !Number.isFinite(Number(raw.y))) {
+      dropped++; continue;
+    }
+    const obj = { ...raw };
+    if (typeof obj.id !== 'string' || !obj.id) obj.id = genId(obj.type);
+    out.push(obj);
+  }
+  return { objects: out, dropped };
+}
 
 export function pushHistory() {
   // 截断 redo 部分
@@ -56,10 +86,12 @@ export function loadAutoSave() {
     if (!raw) return false;
     const data = JSON.parse(raw);
     if (data.objects) {
-      state.objects = data.objects;
+      const { objects, dropped } = sanitizeObjects(data.objects);
+      state.objects = objects;
       // 重置历史
       state.history = [JSON.stringify(state.objects)];
       state.historyIndex = 0;
+      if (dropped > 0) toast(`已恢复上次设计，忽略 ${dropped} 个损坏对象`, 'warn');
       return true;
     }
   } catch (e) {
@@ -95,6 +127,7 @@ export function exportJSON() {
   a.download = `floor-plan-${Date.now()}.json`;
   a.click();
   URL.revokeObjectURL(url);
+  toast('已导出 JSON 文件', 'success');
 }
 
 export function importJSON(file) {
@@ -102,17 +135,21 @@ export function importJSON(file) {
   reader.onload = (e) => {
     try {
       const data = JSON.parse(e.target.result);
-      if (!Array.isArray(data.objects)) throw new Error('文件格式错误');
-      state.objects = data.objects;
+      if (!data || !Array.isArray(data.objects)) throw new Error('文件格式错误：缺少 objects 数组');
+      const { objects, dropped } = sanitizeObjects(data.objects);
+      state.objects = objects;
       state.selectedId = null;
       state.history = [JSON.stringify(state.objects)];
       state.historyIndex = 0;
       renderAll();
       autoSave();
+      if (dropped > 0) toast(`已加载 ${objects.length} 个对象，忽略 ${dropped} 个无效对象`, 'warn');
+      else toast(`已加载 ${objects.length} 个对象`, 'success');
     } catch (err) {
-      alert('加载失败：' + err.message);
+      toast('加载失败：' + err.message, 'error');
     }
   };
+  reader.onerror = () => toast('读取文件失败', 'error');
   reader.readAsText(file);
 }
 
@@ -126,4 +163,5 @@ export function exportPNG(stage) {
   a.href = dataURL;
   a.download = `floor-plan-${Date.now()}.png`;
   a.click();
+  toast('已导出 PNG 图片', 'success');
 }
